@@ -1,1 +1,6 @@
+TODO:
 
++Add automatic .png and .ogg file detection in folder
++Add a GUI
+  +Add a Linux / X Window System GUI
+  +Add a Windows GUI
