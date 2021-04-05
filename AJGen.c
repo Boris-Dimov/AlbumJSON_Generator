@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#if defined(WIN32_LEAN_AND_MEAN) || defined(_WIN32)
+	#include <windows.h>	//windows.h has to be included here
+#endif
 #define MAX_STRING_LENGTH 255 //arbitrary, chosen because the maximum filename size in most OSes is 255
 #define DIR_LIST_LENGTH 20
 
@@ -26,14 +29,13 @@ _Bool ListCurrentDirectory(char filenameList[][MAX_STRING_LENGTH], const char* f
 
 		return 1;	//we return true to indicate that we have read the directory listing successfully.
 
-	#elif WIN32_LEAN_AND_MEAN //checking if we are on Windows
+	#elif defined(WIN32_LEAN_AND_MEAN) || defined(_WIN32) //checking if we are on Windows
 
-		#include <windows.h>
-		WIN32_FIND_DATA FindFileData;
+		WIN32_FIND_DATAA FindFileData;	//in Visual Studio, the type needs an additional '_' before the name (_WIN32...)
 		HANDLE hFind;
-		hFind = FindFirstFileW("*.*", &FindFileData);
+		LPCSTR placeholder = "*.*";
+		hFind = FindFirstFileA(placeholder, &FindFileData);	//don't ask why this works, it works. It just works.
 
-		wprintf(TEXT("%s"),GetLastError());
 		if (hFind == INVALID_HANDLE_VALUE) return 0; //if the handle is invalid, return false to indicate a failed reading operation
 
 		int flIndex = 0;	//index to an entry in filenameList
