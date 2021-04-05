@@ -26,7 +26,7 @@ Preparation: Put all your .ogg files and a .png file you wish to use as an album
 In auto-detection mode step 5 happens automatically.
 
 # Known issues
-Track filenames of the kind "track#.ogg" (where # is a number) are known to cause conflicts with existing files in the game and should be avoided.
-The program is known to NOT read Unicode characters properly on Windows.
-On Linux/UNIX and derivatives, the tracks will most likely appear in random order.
-Compilation on Windows with Visual Studio requires tweaks to the code.
+-Track filenames of the kind "track#.ogg" (where # is a number) are known to cause conflicts with existing files in the game and should be avoided.
+-The program is known to NOT read Unicode characters properly on Windows.
+-On Linux/UNIX and derivatives, the tracks will most likely appear in random order.
+-Compilation on Windows with Visual Studio requires tweaks to the code.
