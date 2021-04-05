@@ -34,3 +34,5 @@ The program is known to NOT read Unicode characters properly on Windows.
 On Linux/UNIX and derivatives, the tracks will most likely appear in random order.
 
 Compilation on Windows with Visual Studio requires tweaks to the code.
+
+The 20-file cap on the list is artificially added and can be easily extended with a single change in the source code.
