@@ -31,20 +31,34 @@ _Bool ListCurrentDirectory(char filenameList[][MAX_STRING_LENGTH], const char* f
 
 	#elif defined(WIN32_LEAN_AND_MEAN) || defined(_WIN32) //checking if we are on Windows
 
-		WIN32_FIND_DATAA FindFileData;	//in Visual Studio, the type needs an additional '_' before the name (_WIN32...)
+		WIN32_FIND_DATAW FindFileData;	//in Visual Studio, the type needs an additional '_' before the name (_WIN32...)
 		HANDLE hFind;
-		LPCSTR placeholder = "*.*";
-		hFind = FindFirstFileA(placeholder, &FindFileData);	//don't ask why this works, it works. It just works.
+		LPCWSTR placeholder = L"*.*";
+		hFind = FindFirstFileW(placeholder, &FindFileData);	//don't ask why this works, it works. It just works.
 
 		if (hFind == INVALID_HANDLE_VALUE) return 0; //if the handle is invalid, return false to indicate a failed reading operation
 
-		int flIndex = 0;	//index to an entry in filenameList
-		while (FindNextFileA(hFind, &FindFileData) && flIndex < DIR_LIST_LENGTH)	//as long as there are directory entries AND we haven't filled the filename list yet
+		wchar_t wFileExtension[MAX_STRING_LENGTH], wFilenameListEntry[MAX_STRING_LENGTH];
+		size_t checker = mbstowcs(wFileExtension, fileExtension, MAX_STRING_LENGTH);	//converting the file extension to a wide string
+		if (checker < 1)	//checking if the conversion went well, and returning error if not
 		{
-			if(strstr(FindFileData.cFileName, fileExtension) != NULL)	//if the file has the desired extension
+			FindClose(hFind);
+			return 0;
+		}
+
+		int flIndex = 0;	//index to an entry in filenameList
+		while (FindNextFileW(hFind, &FindFileData) && flIndex < DIR_LIST_LENGTH)	//as long as there are directory entries AND we haven't filled the filename list yet
+		{
+			if(wcsstr(FindFileData.cFileName, wFileExtension) != NULL)	//if the file has the desired extension
 			{
-				strcpy(filenameList[flIndex],FindFileData.cFileName);	//we add its filename to the list of filenames
-				flIndex++;										//and increase the index to the list entries with 1
+				wcscpy(wFilenameListEntry,FindFileData.cFileName);		//we add its filename to the list of filenames
+				checker = WideCharToMultiByte(CP_UTF8, 0, wFilenameListEntry, MAX_STRING_LENGTH, filenameList[flIndex], MAX_STRING_LENGTH, NULL, NULL);
+				if (checker < 0)	//checking if the conversion went well, and returning error if not
+				{
+					FindClose(hFind);
+					return 0;
+				}
+				flIndex++;												//and increase the index to the list entries with 1
 			}
 		}
 
@@ -80,6 +94,12 @@ int main(void){
 		 albumYear[5],
 		 albumDesc[MAX_STRING_LENGTH],
 		 albumCoverFilename[MAX_STRING_LENGTH]; //definitions for the album
+
+/*Setting the console codepages on Windows to UTF-8*/
+#if defined(WIN32_LEAN_AND_MEAN) || defined(_WIN32)
+	SetConsoleOutputCP(CP_UTF8);
+	SetConsoleCP(CP_UTF8);
+#endif
 
 	printf("Album.json Generator v0.3\n\nPlace the executable file in the directory where the audio files are located.\n");
 	printf("If you encounter any issues, feel free to report them at the repository: https://github.com/Boris-Dimov/AlbumJSON_Generator\n\n");
