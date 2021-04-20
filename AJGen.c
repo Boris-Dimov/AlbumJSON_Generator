@@ -101,7 +101,7 @@ int main(void){
 	SetConsoleCP(CP_UTF8);
 #endif
 
-	printf("Album.json Generator v0.3\n\nPlace the executable file in the directory where the audio files are located.\n");
+	printf("Album.json Generator v1.0\n\nPlace the executable file in the directory where the audio files are located.\n");
 	printf("If you encounter any issues, feel free to report them at the repository: https://github.com/Boris-Dimov/AlbumJSON_Generator\n\n");
 	//Just some basic info about the program.
 
