@@ -24,6 +24,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          ref: "traffic"
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
@@ -34,7 +36,13 @@ jobs:
         uses: sangonzal/repository-traffic-action@v0.1.4
         env:
           TRAFFIC_ACTION_TOKEN: ${{ secrets.TRAFFIC_ACTION_TOKEN }} 
-
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v4
+        with:
+          author_name: Santiago Gonzalez
+          message: "GitHub traffic"
+          add: "./traffic/*"
+          ref: "traffic"
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
